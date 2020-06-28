@@ -51,14 +51,25 @@ class StockSymbol(Base):
     __tablename__: str = 'stocks'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100))
-    symbol = Column(String(5))
-    description = Column(String(100))
+    name = Column(String(255))
+    symbol = Column(String(10))
+    ipo_year = Column(Integer, nullable=True)
+    sector = Column(String(100), nullable=True)
+    industry = Column(String(150), nullable=True)
 
-    def __init__(self, name, symbol, description):
+    def __init__(
+            self,
+            name: str,
+            symbol: str,
+            sector: str,
+            industry: str,
+            ipo_year: int,
+    ):
         self.name = name
         self.symbol = symbol
-        self.description = description
+        self.ipo_year = ipo_year
+        self.sector = sector
+        self.industry = industry
 
     def __repr__(self):
-        return f'<Stock: name - {self.name}, symbol - {self.symbol}, description - {self.description}>'
+        return f'<Stock: name - {self.name}, symbol - {self.symbol}>'

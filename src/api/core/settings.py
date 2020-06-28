@@ -21,7 +21,12 @@ DEBUG = sys.gettrace()
 logger = logging.getLogger(__name__)
 formatter = logging.Formatter(fmt='%(asctime)s:%(levelname)s:%(name)s:%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
-file_handler = logging.FileHandler(f'logs/settings.log')
+try:
+    file_handler = logging.FileHandler('logs/settings.log')
+except FileNotFoundError:
+    os.mkdir('logs')
+    file_handler = logging.FileHandler('logs/settings.log')
+
 file_handler.setFormatter(formatter)
 
 logger.setLevel(logging.INFO)
@@ -41,11 +46,9 @@ POSTGRES_CONFIG = {
 POSTGRES_URI = f'postgresql://{POSTGRES_CONFIG["POSTGRES_USER"]}:{POSTGRES_CONFIG["POSTGRES_PASSWORD"]}@' \
                f'{POSTGRES_CONFIG["POSTGRES_HOST"] if not DEBUG else LOCALHOST}/{POSTGRES_CONFIG["POSTGRES_DB"]}'
 
-print(POSTGRES_URI)
-
 try:
     psycopg2.connect(
-        db_name=POSTGRES_CONFIG['POSTGRES_DB'],
+        database=POSTGRES_CONFIG['POSTGRES_DB'],
         user=POSTGRES_CONFIG['POSTGRES_USER'],
         password=POSTGRES_CONFIG['POSTGRES_PASSWORD'],
         host=POSTGRES_CONFIG['POSTGRES_HOST'],
